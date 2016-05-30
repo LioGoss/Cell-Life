@@ -188,30 +188,30 @@
 	var ySpeed=0, xSpeed=0;
 	document.onkeydown=function(e){
 		playerPush=2;
-		if(e.keyCode ===38){//UP38
+		if(e.keyCode ===90){//Z
 			ySpeed=-2;
 		}
-		if(e.keyCode ===40){//DOWN
+		if(e.keyCode ===83){//S
 			ySpeed=+2
 		}
-		if(e.keyCode ===37){//LEFT
+		if(e.keyCode ===81){//Q
 			xSpeed=-2;
 		}
-		if(e.keyCode ===39){//RIGHT
+		if(e.keyCode ===68){//D
 			xSpeed=2;
 		}
 	}
 	document.onkeyup=function(e){
-		if(e.keyCode ===38){//UP
+		if(e.keyCode ===90){//Z
 			ySpeed =0;
 		}
-		if(e.keyCode ===40){//DOWN
+		if(e.keyCode ===83){//S
 			ySpeed=0;
 		}
-		if(e.keyCode ===37){//LEFT
+		if(e.keyCode ===81){//Q
 			xSpeed =0;
 		}
-		if(e.keyCode ===39){//RIGHT
+		if(e.keyCode ===68){//D
 			xSpeed =0;
 		}
 	}
