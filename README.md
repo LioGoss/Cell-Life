@@ -1,2 +1,2 @@
 # Cell-Life
-Experimentations in JavaScript on a mix between a game and a cell life simulation.
+A small game developped in JavaScript and inspired by Spore and Agar.io. 
