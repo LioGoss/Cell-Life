@@ -10,8 +10,8 @@
             return;
         }
 
-	canvas.height = 600;
-	canvas.width = 800;
+	canvas.height = window.innerHeight;
+	canvas.width = window.innerWidth;
 	var playerPush = 0; //passe à 1 quand user appuie sur une touche
 	var timer = 0; //timer pour la génération des ennemis
 	var count = 1; //numéro pour compter les ennemis
@@ -20,14 +20,13 @@
 	//object Pool : contient les éléments non joueur
 	var pool = {};//déclaration d'un objet pool
 	function enemyGenerate(){
-		var number = Math.random()
 		var x = Math.floor((Math.random() * canvas.width)+1 );
 		var y = Math.floor((Math.random() * canvas.height)+1 );
 		var size = Math.floor((Math.random() * (cellPlayer.size)*2)+1 );
-		var xSpeed = Math.floor((Math.random() * 1)+1 );
-		var ySpeed = Math.floor((Math.random() * 1)+1 );
+		var xSpeed = Math.floor((Math.random())+1 );
+		var ySpeed = Math.floor((Math.random())+1 );
 		
-		pool["cell"+count]= new cell(size,round5(x),round5(y),xSpeed, ySpeed);
+		pool["cell"+count] = new cell(size,round5(x),round5(y),xSpeed, ySpeed);
 		count++;
 		timer = 0;
 		document.getElementById("score").innerHTML = size;
@@ -85,7 +84,7 @@
 	}
 	
 	//Player
-	var pSize = 5,
+	var pSize = 10,
 		pX = canvas.width/2;
 		pY = canvas.height/2;
 	cellPlayer = new cell(pSize, pX, pY, 0, 0);	
@@ -146,7 +145,11 @@
 				
 				context.font = "12px Arial"; 
 				context.fillText("< This is your cell", (canvas.width/2)+15, canvas.height/2+5); //text fait 210 de large
+
 				context.fillText("Use Z,Q,S,D to move ", (canvas.width/2)+20, canvas.height/2+20); //text fait 210 de large
+
+				context.fillText("Use ZQSD to movXe ", (canvas.width/2)+20, canvas.height/2+20); //text fait 210 de large
+
 				context.font = "14px Arial"; 
 				context.fillText("Grow by eating smaller cells...", (canvas.width/2)-160, (canvas.height/2)-150); //text fait 210 de large
 				context.fillText("...but be careful! Avoid the bigger ones!", (canvas.width/2)-20, (canvas.height/2)-100); //text fait 210 de large
@@ -157,10 +160,10 @@
 			}
 			
 			/*cercle
-			context.beginPath();
-			context.arc(100, 100, 50, 0, Math.PI*2);
-			context.fill();
-			context.closePath();
+			 context.beginPath();
+			 context.arc(100, 100, 50, 0, Math.PI*2);
+			 context.fill();
+			 context.closePath();
 			*/
 			
 			/*rectangle
@@ -241,8 +244,6 @@ function getMousePos(canvas, evt) {
 */
 
 }
-
-
 
 //object Cell
 function cell(size, xPos, yPos, xSpeed, ySpeed) {
