@@ -1,4 +1,16 @@
 ﻿window.onload = function(){
+	$("#startModal").modal('show');
+}
+$(document).ready(function()
+{
+	$("#start").click(function(){
+		start();
+		$("#startModal").modal('toggle');
+	});
+});
+
+
+function start(){
     var canvas = document.getElementById('main_canvas');
         if(!canvas){
             alert("Impossible de récupérer le canvas");
@@ -15,24 +27,24 @@
 	var playerPush = 0; //passe à 1 quand user appuie sur une touche
 	var timer = 0; //timer pour la génération des ennemis
 	var count = 1; //numéro pour compter les ennemis
-	var pause=0;
+	var pause = 0;
 	
 	//object Pool : contient les éléments non joueur
 	var pool = {};//déclaration d'un objet pool
+
 	function enemyGenerate(){
 		var x = Math.floor((Math.random() * canvas.width)+1 );
 		var y = Math.floor((Math.random() * canvas.height)+1 );
 		var size = Math.floor((Math.random() * (cellPlayer.size)*2)+1 );
-		var xSpeed = Math.floor((Math.random())+1 );
-		var ySpeed = Math.floor((Math.random())+1 );
-		
-		pool["cell"+count] = new cell(size,round5(x),round5(y),xSpeed, ySpeed);
+		var xSpeed = 1;
+		var ySpeed = 1;
+		var initialOrientation = randomInt(1,8);
+		pool["cell"+count] = new cell(size,x,y,xSpeed, ySpeed,initialOrientation);
 		count++;
 		timer = 0;
 		document.getElementById("score").innerHTML = size;
 	}
 
-	
 	function contact(){ //verifier si player a une collision avec un ennemi
 		var sizePlayer, xPlayer, Yplayer, sizeCollision, xCollision, yCollision;
 		for(var id in pool){
@@ -46,12 +58,12 @@
 			if(xCollision<xPlayer+(sizePlayer/2) && xCollision>xPlayer-(sizePlayer/2)){
 				if(yCollision<yPlayer+(sizePlayer/2) && yCollision>yPlayer-(sizePlayer/2)){
 					if(sizePlayer>=sizeCollision){
-						//alert("CONTACT");
+						// ENNEMI MANGE
 						delete pool[id];
 						cellPlayer.size = cellPlayer.size+(Math.round(sizeCollision/7));
 					}
 					else{
-						//alert("WASTED");
+						// JEU PERDU
 						pause=1;
 					}
 					
@@ -59,7 +71,15 @@
 			}
 		}
 	}
-	
+
+	// Choisit une direction vers laquelle aller.
+	function updateDirection()
+	{
+		for(var id in pool) {
+			pool[id].direction = randomInt(1, 8);
+		}
+	}
+
 	function ennemy(){ //dessiner les ennemis
 		//var sizePlayer, xPlayer, Yplayer, sizeCollision, xCollision, yCollision;
 		for(var id in pool){
@@ -82,6 +102,77 @@
 			context.fillStyle = 'white';
 		}
 	}
+
+	// déplace les ennemis
+	function ennemyAI(){
+		for(var id in pool){
+			s = pool[id].size;
+			x = pool[id].xPos;
+			y = pool[id].yPos;
+			dx = pool[id].xSpeed;
+			dy = pool[id].ySpeed;
+			direction = pool[id].direction;
+
+			switch (direction) {
+				case 1:
+					// GAUCHE
+					pool[id].xPos -= dx;
+					pool[id].yPos += 0;
+					break;
+				case 2:
+					// DROITE
+					pool[id].xPos += dx;
+					pool[id].yPos += 0;
+					break;
+				case 3:
+					// HAUT
+					pool[id].xPos += 0;
+					pool[id].yPos -= dy;
+					break;
+				case 4:
+					// BAS
+					pool[id].xPos += 0;
+					pool[id].yPos += dy;
+					break;
+				case 5:
+					// BAS à DROITE
+					pool[id].xPos += dx;
+					pool[id].yPos += dy;
+					break;
+				case 6:
+					// BAS à GAUCHE
+					pool[id].xPos -= dx;
+					pool[id].yPos += dy;
+					break;
+				case 7:
+					// HAUT à DROITE
+					pool[id].xPos += dx;
+					pool[id].yPos -= dy;
+					break;
+				case 8:
+					// HAUT à GAUCHE
+					pool[id].xPos -= dx;
+					pool[id].yPos -= dy;
+					break;
+
+			}
+
+			if (pool[id].xPos<0){
+				pool[id].xPos=canvas.width;
+			}
+			if (pool[id].xPos>canvas.width){
+				pool[id].xPos=0;
+			}
+			if (pool[id].yPos<0){
+				pool[id].yPos=canvas.height;
+			}
+			if (pool[id].yPos>canvas.height){
+				pool[id].yPos=0;
+			}
+			$("#ennemyCell").html("Cell("+s+","+x+","+y+","+pool[id].xPos+","+pool[id].yPos+","+dx+","+dy+")");
+		}
+	}
+
 	
 	//Player
 	var pSize = 10,
@@ -90,8 +181,9 @@
 	cellPlayer = new cell(pSize, pX, pY, 0, 0);	
 	
     var myInterval = setInterval(animate, 1000/60);//boucle de rafraichissement
-	
-    function animate(){
+	var updateDirectionInterval = setInterval(updateDirection, 1000*3);//boucle de rafraichissement
+
+	function animate(){
 		if(pause==0){
 			//vider canvas
 			context.clearRect(0, 0, canvas.width, canvas.height);
@@ -125,14 +217,13 @@
 				//context.fillStyle = "#000000";
 			
 			//ennemyCell
-			if (timer >= 300){
-				//alert("remise à 0")
+			if (timer >= 200)
 				enemyGenerate();
-				//timer=0;
-			}
+
+			// déplace les ennemis
+			ennemyAI();
 			//dessiner ennemis
 			ennemy();
-			
 			//vérifier collisions
 			contact();
 			
@@ -170,18 +261,21 @@
 			// avoir un compteur de carré pour pas en mettre trop? --> boucle
 			
 			
-			
-			//Ajouter bouton play et choix couleur?
 			timer++;
+			$("#timer").html(timer);
 		}
 		else{
 			//context.strokeStyle = 'red';
 			context.strokeStyle = 'white';
 			context.font = "100px Arial";
-			context.strokeText("WASTED",(canvas.width/2)-200,canvas.height/2);
+			context.strokeText("WASTED",(canvas.width/2)-200,canvas.height/2 +200);
 			context.font = "12px Arial"; 
 			context.strokeStyle = 'white';
 			context.fillText("Cell Life v0.1 by Lionel GOSSELIN - 2016", (canvas.width/2)-110, canvas.height-20);
+
+			clearInterval(myInterval);
+			clearInterval(updateDirectionInterval);
+			$("#startModal").modal('show');
 		}
     } 
 	
@@ -242,16 +336,30 @@ function getMousePos(canvas, evt) {
 }
 
 //object Cell
-function cell(size, xPos, yPos, xSpeed, ySpeed) {
+/*
+*  orientation:
+*    1: GAUCHE
+*    2: DROITE
+*    3: HAUT
+*    4: BAS
+*    5: BAS DROITE
+*    6: BAS GAUCHE
+*    7: HAUT DROITE
+*    8: HAUT GAUCHE
+*
+* */
+function cell(size, xPos, yPos, xSpeed, ySpeed, direction) {
 	this.size = size;
 	this.xPos = xPos;
 	this.yPos = yPos;
 	this.xSpeed = xSpeed;
-	this.yYpeed = ySpeed;
+	this.ySpeed = ySpeed;
+	this.direction = direction;
 }
 
-//arrondir à 5
-function round5(x)
-{
-    return Math.ceil(x/5)*5;
+function randomInt(min, max) {
+	// inclut les bornes !
+	return Math.floor(Math.random() * (max - min +1)) + min;
 }
+
+
