@@ -48,7 +48,7 @@
 					if(sizePlayer>=sizeCollision){
 						//alert("CONTACT");
 						delete pool[id];
-						cellPlayer.size = cellPlayer.size+sizeCollision;
+						cellPlayer.size = cellPlayer.size+(Math.round(sizeCollision/7));
 					}
 					else{
 						//alert("WASTED");
@@ -145,11 +145,7 @@
 				
 				context.font = "12px Arial"; 
 				context.fillText("< This is your cell", (canvas.width/2)+15, canvas.height/2+5); //text fait 210 de large
-
 				context.fillText("Use Z,Q,S,D to move ", (canvas.width/2)+20, canvas.height/2+20); //text fait 210 de large
-
-				context.fillText("Use ZQSD to movXe ", (canvas.width/2)+20, canvas.height/2+20); //text fait 210 de large
-
 				context.font = "14px Arial"; 
 				context.fillText("Grow by eating smaller cells...", (canvas.width/2)-160, (canvas.height/2)-150); //text fait 210 de large
 				context.fillText("...but be careful! Avoid the bigger ones!", (canvas.width/2)-20, (canvas.height/2)-100); //text fait 210 de large
