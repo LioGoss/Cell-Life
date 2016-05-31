@@ -1,4 +1,16 @@
 ﻿window.onload = function(){
+	$("#startModal").modal('show');
+}
+$(document).ready(function()
+{
+	$("#start").click(function(){
+		start();
+		$("#startModal").modal('toggle');
+	});
+});
+
+
+function start(){
     var canvas = document.getElementById('main_canvas');
         if(!canvas){
             alert("Impossible de récupérer le canvas");
@@ -26,7 +38,7 @@
 		var xSpeed = Math.floor((Math.random())+1 );
 		var ySpeed = Math.floor((Math.random())+1 );
 		
-		pool["cell"+count] = new cell(size,round5(x),round5(y),xSpeed, ySpeed);
+		pool["cell"+count] = new cell(size,x,y,xSpeed, ySpeed);
 		count++;
 		timer = 0;
 		document.getElementById("score").innerHTML = size;
@@ -248,10 +260,4 @@ function cell(size, xPos, yPos, xSpeed, ySpeed) {
 	this.yPos = yPos;
 	this.xSpeed = xSpeed;
 	this.yYpeed = ySpeed;
-}
-
-//arrondir à 5
-function round5(x)
-{
-    return Math.ceil(x/5)*5;
 }

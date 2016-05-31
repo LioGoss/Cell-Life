@@ -4,19 +4,37 @@
         <title>Cell Life</title>
 		<meta charset="utf-8">
         <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="Bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <script src="jQuery/jquery-2.2.4.min.js"></script>
-        <script src="Bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <script src="canvas.js"></script>
     </head>
     <body>
 		<div style="text-align:center" name="container">
 			<canvas id="main_canvas"  style="border:1px solid gray;background-color:black;">
             Votre navigateur internet n'est pas compatible avec ce programme, mettez-le à jour ou essayez en un autre.
-        </canvas>
-		<br/><button onclick="window.location.href='cellife.html'" class="btn btn-default">NEW GAME</button>
+            </canvas>
 		</div>
-        <div class="jumbotron" style="margin:10px;"><h3>DEBUG</h3> last SIZE created: <p id="score"></p>
+        <div id="startModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Cell-Life Game</h4>
+                    </div>
+                    <div class="modal-body">
+                        <button id ="start" class="btn btn-primary">NEW GAME</button>
+                        <button id ="settings" class="btn btn-warning glyphicon glyphicon-cog"></button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="jumbotron"><h3>DEBUG</h3> last SIZE created: <p id="score"></p>
         </div>
     </body>
 </html>
